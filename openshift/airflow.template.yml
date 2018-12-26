@@ -41,6 +41,10 @@ objects:
       spec:
         containers:
         - env:
+          - name: FLOWER_PORT
+            value: '5555'
+          - name: FLOWER_HOST
+            value: flower
           - name: EXECUTOR
             value: Celery
           - name: FERNET_KEY
@@ -48,22 +52,28 @@ objects:
               secretKeyRef:
                 key: fernet-key
                 name: fernet
-          - name: REDIS_SERVICE_PASSWORD
+          - name: REDIS_HOST
+            value: ${REDIS_HOST}
+          - name: REDIS_PORT
+            value: ${REDIS_PORT}
+          - name: REDIS_PASSWORD
             valueFrom:
               secretKeyRef:
                 key: database-password
                 name: redis
-          - name: POSTGRESQL_SERVICE_DB
+          - name: POSTGRES_HOST
+            value: ${POSTGRES_HOST}
+          - name: POSTGRES_DB
             valueFrom:
               secretKeyRef:
                 key: database-name
                 name: postgresql
-          - name: POSTGRESQL_SERVICE_USER
+          - name: POSTGRES_USER
             valueFrom:
               secretKeyRef:
                 key: database-user
                 name: postgresql
-          - name: POSTGRESQL_SERVICE_PASSWORD
+          - name: POSTGRES_PASSWORD
             valueFrom:
               secretKeyRef:
                 key: database-password
@@ -359,22 +369,28 @@ objects:
           env:
           - name: EXECUTOR
             value: Celery
-          - name: POSTGRESQL_SERVICE_DB
+          - name: POSTGRES_HOST
+            value: ${POSTGRES_HOST}
+          - name: POSTGRES_DB
             valueFrom:
               secretKeyRef:
                 key: database-name
                 name: postgresql
-          - name: POSTGRESQL_SERVICE_USER
+          - name: POSTGRES_USER
             valueFrom:
               secretKeyRef:
                 key: database-user
                 name: postgresql
-          - name: POSTGRESQL_SERVICE_PASSWORD
+          - name: POSTGRES_PASSWORD
             valueFrom:
               secretKeyRef:
                 key: database-password
                 name: postgresql
-          - name: REDIS_SERVICE_PASSWORD
+          - name: REDIS_HOST
+            value: ${REDIS_HOST}
+          - name: REDIS_PORT
+            value: ${REDIS_PORT}
+          - name: REDIS_PASSWORD
             valueFrom:
               secretKeyRef:
                 key: database-password
@@ -405,22 +421,28 @@ objects:
           env:
           - name: EXECUTOR
             value: Celery
-          - name: POSTGRESQL_SERVICE_DB
+          - name: POSTGRES_HOST
+            value: ${POSTGRES_HOST}
+          - name: POSTGRES_DB
             valueFrom:
               secretKeyRef:
                 key: database-name
                 name: postgresql
-          - name: POSTGRESQL_SERVICE_USER
+          - name: POSTGRES_USER
             valueFrom:
               secretKeyRef:
                 key: database-user
                 name: postgresql
-          - name: POSTGRESQL_SERVICE_PASSWORD
+          - name: POSTGRES_PASSWORD
             valueFrom:
               secretKeyRef:
                 key: database-password
                 name: postgresql
-          - name: REDIS_SERVICE_PASSWORD
+          - name: REDIS_HOST
+            value: ${REDIS_HOST}
+          - name: REDIS_PORT
+            value: ${REDIS_PORT}
+          - name: REDIS_PASSWORD
             valueFrom:
               secretKeyRef:
                 key: database-password
@@ -515,22 +537,28 @@ objects:
         - env:
           - name: EXECUTOR
             value: Celery
-          - name: REDIS_SERVICE_PASSWORD
+          - name: REDIS_HOST
+            value: ${REDIS_HOST}
+          - name: REDIS_PORT
+            value: ${REDIS_PORT}
+          - name: REDIS_PASSWORD
             valueFrom:
               secretKeyRef:
                 key: database-password
                 name: redis
-          - name: POSTGRESQL_SERVICE_DB
+          - name: POSTGRES_HOST
+            value: ${POSTGRES_HOST}
+          - name: POSTGRES_DB
             valueFrom:
               secretKeyRef:
                 key: database-name
                 name: postgresql
-          - name: POSTGRESQL_SERVICE_USER
+          - name: POSTGRES_USER
             valueFrom:
               secretKeyRef:
                 key: database-user
                 name: postgresql
-          - name: POSTGRESQL_SERVICE_PASSWORD
+          - name: POSTGRES_PASSWORD
             valueFrom:
               secretKeyRef:
                 key: database-password
@@ -867,6 +895,11 @@ parameters:
   from: '[A-Z0-9]{12}'
   generate: expression
   name: FLOWER_BASIC_AUTH
+- description: PostgreSQL Host.
+  displayName: PostgreSQL Host.
+  name: POSTGRES_HOST
+  value: postgresql
+  required: true
 - description: Username for PostgreSQL user that will be used for accessing the database.
   displayName: PostgreSQL Connection Username
   from: 'user[A-Z0-9]{5}'
@@ -885,6 +918,16 @@ parameters:
   generate: expression
   name: POSTGRESQL_DATABASE
   required: true
+- description: Redis Host.
+  displayName: Redis Host (to avoid issues with default naming in OpenShift).
+  name: REDIS_HOST
+  value: redis
+  required: true
+- description: Redis Port.
+  displayName: Redis Port (to avoid issues with default naming in OpenShift).
+  name: REDIS_PORT
+  value: "6379"
+  required: true
 - description: Password for Redis database.
   displayName: Redis Connection Password
   from: '[A-Z0-9]{15}'
@@ -894,12 +937,12 @@ parameters:
 - description: Application name.
   displayName: Airflow Application Name.
   name: APPLICATION_NAME
-  value: seism
+  value: yoya
   required: true
 - description: Airflow image link.
   displayName: Airflow Image Link.
   name: AIRFLOW_IMAGE
-  value: 172.30.21.196:5000/bix-airflow-cluster/bix-airflow-base-image
+  value: eandgya/os-airflow
   required: true
 - description: Airflow base image stream name.
   displayName: Airflow Base Image Stream Name.
@@ -909,7 +952,7 @@ parameters:
 - description: Namespace
   displayName: Project Name.
   name: PROJECT_NAME
-  value: seism
+  value: yoya
 - description: Attached volume name
   displayName: Volume Name
   name: VOLUME_NAME
